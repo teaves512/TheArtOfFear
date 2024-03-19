@@ -1,0 +1,120 @@
+// Produced by Lucky 13 (Team 13) for module GDEV60033, Staffordshire University.
+
+#include "APlayerCharacter.h"
+
+#include "EnhancedInput/Public/EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Input/AInputConfigData.h"
+#include "InputActionValue.h"
+#include "InputMappingContext.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+AAPlayerCharacter::AAPlayerCharacter()
+{
+	PrimaryActorTick.bCanEverTick = false; // TODO: This must be enable when Tick is in use.
+
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	CameraComp->SetupAttachment(RootComponent);
+}
+void AAPlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitialMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+}
+
+void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	// Get the player controller.
+	APlayerController* PC = Cast<APlayerController>(GetController());
+
+	// Get the local player subsystem.
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+	// Clear out existing mapping, and add our mapping
+	Subsystem->ClearAllMappings();
+	Subsystem->AddMappingContext(InputMapping.LoadSynchronous(), 0);
+
+	// Get the enhanced input component.
+	UEnhancedInputComponent* PEI = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	// Bind the actions.
+	PEI->BindAction(InputActions.Get()->InputMove.Get(), ETriggerEvent::Triggered, this, &AAPlayerCharacter::OnInput_Move);
+	PEI->BindAction(InputActions.Get()->InputLook.Get(), ETriggerEvent::Triggered, this, &AAPlayerCharacter::OnInput_Look);
+	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_StartSprint);
+	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndSprint);
+	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
+	PEI->BindAction(InputActions.Get()->InputJump.Get(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
+}
+
+void AAPlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// TODO: Tick is currently disabled. Enable in the constructor.
+}
+
+void AAPlayerCharacter::OnInput_Move(const FInputActionValue& Value)
+{
+	if (Controller != nullptr)
+	{
+		const FVector2D MoveValue = Value.Get<FVector2D>();
+		const FRotator MovementRotation(0, Controller->GetControlRotation().Yaw, 0);
+ 
+		// Forward/Backward direction.
+		if (MoveValue.Y != 0.f)
+		{
+			// Get forward vector
+			const FVector Direction = MovementRotation.RotateVector(FVector::ForwardVector);
+ 
+			AddMovementInput(Direction, MoveValue.Y);
+		}
+ 
+		// Right/Left direction.
+		if (MoveValue.X != 0.f)
+		{
+			// Get right vector
+			const FVector Direction = MovementRotation.RotateVector(FVector::RightVector);
+ 
+			AddMovementInput(Direction, MoveValue.X);
+		}
+	}
+}
+
+void AAPlayerCharacter::OnInput_Look(const FInputActionValue& Value)
+{
+	if (Controller != nullptr)
+	{
+		const FVector2D LookValue = Value.Get<FVector2D>();
+
+		// Yaw input turns the whole character.
+		if (LookValue.X != 0.0f)
+		{
+			AddControllerYawInput(LookValue.X);
+		}
+
+		// Pitch input turns the characters 'head' (the CameraComp).
+		if (LookValue.Y != 0.0f)
+		{
+			FRotator CameraRot = CameraComp->GetRelativeRotation();
+			CameraRot.Pitch = FMath::Clamp(CameraRot.Pitch + LookValue.Y, -MaxLookAngle, MaxLookAngle);
+			
+			CameraComp->SetRelativeRotation(CameraRot);
+		}
+	}
+}
+
+void AAPlayerCharacter::OnInput_StartSprint(const FInputActionValue& Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+}
+
+void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
+{
+	GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
+}
+
+void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
+{
+	Jump();
+}
