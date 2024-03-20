@@ -78,6 +78,8 @@ void AAPlayerCharacter::OnInput_Move(const FInputActionValue& Value)
  
 			AddMovementInput(Direction, MoveValue.X);
 		}
+
+		MakeNoise(1.0f, this, GetActorLocation(), 1000.f);
 	}
 }
 
