@@ -3,15 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
-
-#include "APlayerController.generated.h"
+#include "AIController.h"
+#include "AAngel_Controller.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THEARTOFFEAR_API AAPlayerController : public APlayerController
+class THEARTOFFEAR_API AAAngel_Controller : public AAIController
 {
 	GENERATED_BODY()
 	
