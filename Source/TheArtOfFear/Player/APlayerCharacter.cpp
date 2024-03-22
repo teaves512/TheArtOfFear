@@ -45,6 +45,7 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputJump.Get(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
+	PEI->BindAction(InputActions.Get()->InputTakePhoto.Get(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
 }
 
 void AAPlayerCharacter::Tick(float DeltaTime)
@@ -79,7 +80,7 @@ void AAPlayerCharacter::OnInput_Move(const FInputActionValue& Value)
 			AddMovementInput(Direction, MoveValue.X);
 		}
 
-		MakeNoise(1.0f, this, GetActorLocation(), 1000.f);
+		PlayerMakeNoise();
 	}
 }
 

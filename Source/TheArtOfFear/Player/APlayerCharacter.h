@@ -35,6 +35,11 @@ protected:
 	void OnInput_StartSprint(const FInputActionValue& Value);
 	void OnInput_EndSprint(const FInputActionValue& Value);
 	void OnInput_Jump(const FInputActionValue& Value);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInput_TakePhoto(const FInputActionValue& Value);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayerMakeNoise();
 
 	// PARAMS
 protected:
