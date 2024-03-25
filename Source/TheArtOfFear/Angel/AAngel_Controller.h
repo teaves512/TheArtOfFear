@@ -21,8 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = true))
-	TObjectPtr<UBehaviorTree> BehaviorTree;
+	UFUNCTION()
+	virtual void InitializeBT();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComponent;

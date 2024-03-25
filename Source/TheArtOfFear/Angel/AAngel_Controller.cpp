@@ -19,11 +19,13 @@ AAAngel_Controller::AAAngel_Controller()
 void AAAngel_Controller::BeginPlay()
 {
 	Super::BeginPlay();
+	BehaviorTreeComponent->StartLogic();
+	UBehaviorTree *BT = BehaviorTreeComponent->GetCurrentTree();
 
-	if (IsValid(BehaviorTree.Get()))
+	if (IsValid(BT))
 	{
-		RunBehaviorTree(BehaviorTree.Get());
-		BehaviorTreeComponent->StartTree(*BehaviorTree.Get());
+		RunBehaviorTree(BehaviorTreeComponent->GetCurrentTree());
+		BehaviorTreeComponent->StartTree(*BT);
 	}
 }
 
@@ -32,9 +34,17 @@ void AAAngel_Controller::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	if (IsValid(Blackboard.Get()) && IsValid(BehaviorTree.Get()))
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &AAAngel_Controller::InitializeBT);
+}
+
+void AAAngel_Controller::InitializeBT()
+{
+	BehaviorTreeComponent->StartLogic();
+	UBehaviorTree* BT = BehaviorTreeComponent->GetCurrentTree();
+
+	if (IsValid(Blackboard.Get()) && IsValid(BT))
 	{
-		Blackboard->InitializeBlackboard(*BehaviorTree.Get()->BlackboardAsset.Get());
-		//Blackboard->SetValueAsObject("PlayerCharacter", UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+		Blackboard->InitializeBlackboard(*BT->BlackboardAsset.Get()); 
+		Blackboard->SetValueAsObject("PlayerCharacter", UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	}
 }
