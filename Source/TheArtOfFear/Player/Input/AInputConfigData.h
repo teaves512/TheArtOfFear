@@ -30,8 +30,5 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AInputConfigData")
 	TSoftObjectPtr<UInputAction> InputJump = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AInputConfigData")
-	TSoftObjectPtr<UInputAction> InputPause = nullptr;
 	
 };
