@@ -19,13 +19,12 @@ AAAngel_Controller::AAAngel_Controller()
 void AAAngel_Controller::BeginPlay()
 {
 	Super::BeginPlay();
-	BehaviorTreeComponent->StartLogic();
-	UBehaviorTree *BT = BehaviorTreeComponent->GetCurrentTree();
 
-	if (IsValid(BT))
+
+	if (IsValid(BehaviorTree.Get()))
 	{
-		RunBehaviorTree(BehaviorTreeComponent->GetCurrentTree());
-		BehaviorTreeComponent->StartTree(*BT);
+		RunBehaviorTree(BehaviorTree.Get());
+		BehaviorTreeComponent->StartTree(*BehaviorTree.Get());
 	}
 }
 
@@ -42,9 +41,9 @@ void AAAngel_Controller::InitializeBT()
 	BehaviorTreeComponent->StartLogic();
 	UBehaviorTree* BT = BehaviorTreeComponent->GetCurrentTree();
 
-	if (IsValid(Blackboard.Get()) && IsValid(BT))
+	if (IsValid(Blackboard.Get()) && IsValid(BehaviorTree.Get()))
 	{
-		Blackboard->InitializeBlackboard(*BT->BlackboardAsset.Get()); 
-		Blackboard->SetValueAsObject("PlayerCharacter", UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		Blackboard->InitializeBlackboard(*BehaviorTree.Get()->BlackboardAsset.Get());
+		//Blackboard->SetValueAsObject("PlayerCharacter", UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	}
 }

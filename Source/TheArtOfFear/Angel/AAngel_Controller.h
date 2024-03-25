@@ -8,7 +8,7 @@
 #include "AAngel_Controller.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class THEARTOFFEAR_API AAAngel_Controller : public AAIController
@@ -21,12 +21,12 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
-	UFUNCTION()
-	virtual void InitializeBT();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = true))
+	TObjectPtr<UBehaviorTree> BehaviorTree;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComponent;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UBlackboardComponent> BlackboardComponent;
 };
