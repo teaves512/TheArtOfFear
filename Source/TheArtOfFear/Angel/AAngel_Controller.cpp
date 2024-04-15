@@ -37,10 +37,14 @@ void AAAngel_Controller::OnPossess(APawn* InPawn)
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &AAAngel_Controller::InitializeBT);
 }
 
+void AAAngel_Controller::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 void AAAngel_Controller::InitializeBT()
 {
-	BehaviorTreeComponent->StartLogic();
-	UBehaviorTree* BT = BehaviorTreeComponent->GetCurrentTree();
+	UBehaviorTree* BT = BehaviorTreeComponent->GetCurrentTree(); 
 
 	if (IsValid(Blackboard.Get()) && IsValid(BT))
 	{
