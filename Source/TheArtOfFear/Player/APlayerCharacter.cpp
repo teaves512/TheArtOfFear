@@ -38,13 +38,15 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	// Get the enhanced input component.
 	UEnhancedInputComponent* PEI = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
+	InputActions.LoadSynchronous();
+
 	// Bind the actions.
-	PEI->BindAction(InputActions.Get()->InputMove.Get(), ETriggerEvent::Triggered, this, &AAPlayerCharacter::OnInput_Move);
-	PEI->BindAction(InputActions.Get()->InputLook.Get(), ETriggerEvent::Triggered, this, &AAPlayerCharacter::OnInput_Look);
-	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_StartSprint);
-	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndSprint);
-	PEI->BindAction(InputActions.Get()->InputSprint.Get(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
-	PEI->BindAction(InputActions.Get()->InputJump.Get(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
+	PEI->BindAction(InputActions.Get()->InputMove.LoadSynchronous(), ETriggerEvent::Triggered, this, &AAPlayerCharacter::OnInput_Move);
+	PEI->BindAction(InputActions.Get()->InputLook.LoadSynchronous(), ETriggerEvent::Triggered, this, &AAPlayerCharacter::OnInput_Look);
+	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_StartSprint);
+	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndSprint);
+	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
+	PEI->BindAction(InputActions.Get()->InputJump.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
 }
 
 void AAPlayerCharacter::Tick(float DeltaTime)
