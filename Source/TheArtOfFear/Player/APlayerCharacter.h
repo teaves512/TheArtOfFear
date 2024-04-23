@@ -21,6 +21,8 @@ class THEARTOFFEAR_API AAPlayerCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	friend class AAPlayerController;
+
 	// OVERRIDES
 protected:
 	AAPlayerCharacter();
@@ -35,6 +37,15 @@ protected:
 	void OnInput_StartSprint(const FInputActionValue& Value);
 	void OnInput_EndSprint(const FInputActionValue& Value);
 	void OnInput_Jump(const FInputActionValue& Value);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInput_TakePhoto(const FInputActionValue& Value);
+	void OnInput_Interact(const FInputActionValue& Value);
+	void OnInput_Pause(const FInputActionValue& Value);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayerMakeNoise();
+
+	bool TryFindPlayerController();
 
 	// PARAMS
 protected:
@@ -60,6 +71,9 @@ protected:
 	TObjectPtr<UCameraComponent> CameraComp = nullptr;
 
 	// INTERNAL
+protected:
+	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
+	
 private:
 	float InitialMaxWalkSpeed = 0.0f;
 
