@@ -38,6 +38,8 @@ public:
 	TSoftObjectPtr<UInputAction> InputPause = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
-	TSoftObjectPtr<UInputAction> InputIneract = nullptr;
-	
+	TSoftObjectPtr<UInputAction> InputInteract = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
+	TSoftObjectPtr<UInputAction> InputCrouch = nullptr;
 };

@@ -47,6 +47,7 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputJump.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
+	PEI->BindAction(InputActions.Get()->InputCrouch.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Crouch);
 	PEI->BindAction(InputActions.Get()->InputTakePhoto.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
 }
 
@@ -111,12 +112,47 @@ void AAPlayerCharacter::OnInput_Look(const FInputActionValue& Value)
 
 void AAPlayerCharacter::OnInput_StartSprint(const FInputActionValue& Value)
 {
+	//If Player is crouching try and uncrouch
+	if (IsCrouching == true) {
+		OnInput_Crouch();
+	}
 	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+	IsSprinting = true;
+	GetWorldTimerManager().SetTimer(StaminaTimer, this, &AAPlayerCharacter::StaminaDecrease, 0.1f, true);
 }
 
 void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 {
-	GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
+	//If Player is crouching, set Walk Speed to Crouch Speed, otherwise set it to Walk Speed (THIS SHOULD BE REDONE AT SOME POINT)
+	if (IsCrouching == true) {
+		GetCharacterMovement()->MaxWalkSpeed = MaxCrouchSpeed;
+		IsSprinting = false;
+	}
+	else {
+		GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
+		IsSprinting = false;
+		GetWorldTimerManager().SetTimer(StaminaTimer, this, &AAPlayerCharacter::StaminaIncrease, 0.05f, true, 2.f);
+	}
+}
+
+void AAPlayerCharacter::StaminaDecrease()
+{
+	//Decrease Stamina by 1, if Stamina is less than or equal to 0, set Stamina to 0 and trigger EndSprint
+	StaminaCurrent--;
+	if (StaminaCurrent <= 0) {
+		StaminaCurrent = 0;
+		OnInput_EndSprint(true);
+	}
+}
+
+void AAPlayerCharacter::StaminaIncrease()
+{
+	//Increase Stamina by 1, if Stamina is greater than or equal to StaminaMax, set Stamina to StaminaMax and clear the timer
+	StaminaCurrent++;
+	if (StaminaCurrent >= StaminaMax) {
+		StaminaCurrent = StaminaMax;
+		GetWorldTimerManager().ClearTimer(StaminaTimer);
+	}
 }
 
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
