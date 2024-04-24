@@ -2,6 +2,7 @@
 
 #include "APlayerCharacter.h"
 
+#include "APlayerController.h"
 #include "EnhancedInput/Public/EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Input/AInputConfigData.h"
@@ -49,6 +50,8 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputJump.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
 	PEI->BindAction(InputActions.Get()->InputCrouch.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Crouch);
 	PEI->BindAction(InputActions.Get()->InputTakePhoto.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
+	PEI->BindAction(InputActions.Get()->InputInteract.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Interact);
+	PEI->BindAction(InputActions.Get()->InputPause.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Pause);
 }
 
 void AAPlayerCharacter::Tick(float DeltaTime)
@@ -158,4 +161,27 @@ void AAPlayerCharacter::StaminaIncrease()
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
 {
 	Jump();
+}
+
+void AAPlayerCharacter::OnInput_Interact(const FInputActionValue& Value)
+{
+}
+
+void AAPlayerCharacter::OnInput_Pause(const FInputActionValue& Value)
+{
+	if (PlayerController.IsValid() == false)
+	{
+		if (!ensureMsgf(TryFindPlayerController(), TEXT("AAPlayerCharacter::OnInput_Interact failed because PlayerController was invalid and failed to instantiate.")))
+		{
+			return;
+		}
+	}
+
+	PlayerController->RequestTogglePause();
+}
+
+bool AAPlayerCharacter::TryFindPlayerController()
+{
+	PlayerController = Cast<AAPlayerController>(GetController());
+	return PlayerController.IsValid();
 }
