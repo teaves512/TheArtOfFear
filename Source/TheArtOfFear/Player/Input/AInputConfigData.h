@@ -42,4 +42,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
 	TSoftObjectPtr<UInputAction> InputCrouch = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
+	TSoftObjectPtr<UInputAction> InputToggleCamera = nullptr;
 };

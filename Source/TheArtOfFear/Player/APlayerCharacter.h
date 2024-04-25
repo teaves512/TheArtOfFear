@@ -35,10 +35,13 @@ protected:
 	void OnInput_Move(const FInputActionValue& Value);
 	void OnInput_Look(const FInputActionValue& Value); 
 	void OnInput_StartSprint(const FInputActionValue& Value);
+	UFUNCTION(BlueprintCallable)
 	void OnInput_EndSprint(const FInputActionValue& Value);
 	void StaminaDecrease();
 	void StaminaIncrease();
 	void OnInput_Jump(const FInputActionValue& Value);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInput_ToggleCamera();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInput_Crouch();
 	UFUNCTION(BlueprintImplementableEvent)
@@ -67,7 +70,7 @@ protected:
 
 	/** Movement speed, in cm/s, when the player character is sprinting. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Movement")
-	float MaxSprintSpeed = 1000.0f;
+	float MaxSprintSpeed = 600.0f;
 
 	/** Movement speed, in cm/s, when the player character is walking. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "APlayerCharacter|Movement")
@@ -75,7 +78,7 @@ protected:
 
 	/** Movement speed, in cm/s, when the player character is crouching. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "APlayerCharacter|Movement")
-	float MaxCrouchSpeed = 250.0f;
+	float MaxCrouchSpeed = 200.0f;
 
 	/** Boolean that tracks whether or not the Player is currently crouching. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -84,6 +87,10 @@ protected:
 	/** Boolean that tracks whether or not the Player is currently sprinting. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsSprinting = false;
+
+	/** Boolean that tracks whether or not the Player currently has the Camera up. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsHoldingCamera = false;
 
 	// COMPONENTS
 protected:

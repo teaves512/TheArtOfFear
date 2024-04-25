@@ -49,6 +49,7 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputJump.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
 	PEI->BindAction(InputActions.Get()->InputCrouch.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Crouch);
+	PEI->BindAction(InputActions.Get()->InputToggleCamera.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_ToggleCamera);
 	PEI->BindAction(InputActions.Get()->InputTakePhoto.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
 	PEI->BindAction(InputActions.Get()->InputInteract.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Interact);
 	PEI->BindAction(InputActions.Get()->InputPause.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Pause);
@@ -115,27 +116,22 @@ void AAPlayerCharacter::OnInput_Look(const FInputActionValue& Value)
 
 void AAPlayerCharacter::OnInput_StartSprint(const FInputActionValue& Value)
 {
-	//If Player is crouching try and uncrouch
-	if (IsCrouching == true) {
-		OnInput_Crouch();
+	//If Player is crouching don't sprint
+	if (IsCrouching == false) {
+		GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+		IsSprinting = true;
+		GetWorldTimerManager().SetTimer(StaminaTimer, this, &AAPlayerCharacter::StaminaDecrease, 0.1f, true);
 	}
-	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
-	IsSprinting = true;
-	GetWorldTimerManager().SetTimer(StaminaTimer, this, &AAPlayerCharacter::StaminaDecrease, 0.1f, true);
+	
 }
 
 void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 {
-	//If Player is crouching, set Walk Speed to Crouch Speed, otherwise set it to Walk Speed (THIS SHOULD BE REDONE AT SOME POINT)
-	if (IsCrouching == true) {
-		GetCharacterMovement()->MaxWalkSpeed = MaxCrouchSpeed;
-		IsSprinting = false;
-	}
-	else {
+	if (IsCrouching == false) {
 		GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
-		IsSprinting = false;
-		GetWorldTimerManager().SetTimer(StaminaTimer, this, &AAPlayerCharacter::StaminaIncrease, 0.05f, true, 2.f);
 	}
+	IsSprinting = false;
+	GetWorldTimerManager().SetTimer(StaminaTimer, this, &AAPlayerCharacter::StaminaIncrease, 0.05f, true, 2.f);
 }
 
 void AAPlayerCharacter::StaminaDecrease()
@@ -160,7 +156,9 @@ void AAPlayerCharacter::StaminaIncrease()
 
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
 {
-	Jump();
+	if (IsCrouching == false) {
+		Jump();
+	}	
 }
 
 void AAPlayerCharacter::OnInput_Interact(const FInputActionValue& Value)
