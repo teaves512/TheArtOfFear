@@ -33,5 +33,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
 	TSoftObjectPtr<UInputAction> InputTakePhoto = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
+	TSoftObjectPtr<UInputAction> InputPause = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AInputConfigData")
+	TSoftObjectPtr<UInputAction> InputIneract = nullptr;
 	
 };
