@@ -8,6 +8,7 @@
 
 #include "APlayerCharacter.generated.h"
 
+class UADigitalCameraComponent;
 class UAInputConfigData;
 class UCameraComponent;
 class UInputMappingContext;
@@ -37,7 +38,6 @@ protected:
 	void OnInput_StartSprint(const FInputActionValue& Value);
 	void OnInput_EndSprint(const FInputActionValue& Value);
 	void OnInput_Jump(const FInputActionValue& Value);
-	UFUNCTION(BlueprintImplementableEvent)
 	void OnInput_TakePhoto(const FInputActionValue& Value);
 	void OnInput_Interact(const FInputActionValue& Value);
 	void OnInput_Pause(const FInputActionValue& Value);
@@ -69,6 +69,9 @@ protected:
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
 	TObjectPtr<UCameraComponent> CameraComp = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
+	TObjectPtr<UADigitalCameraComponent> DigitalCameraComp = nullptr;
 
 	// INTERNAL
 protected:
