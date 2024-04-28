@@ -3,6 +3,9 @@
 #include "ACameraCaptureComponent.h"
 
 #include "Engine/Classes/Engine/TextureRenderTarget2D.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetRenderingLibrary.h"
+#include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
 
 UADigitalCameraComponent::UADigitalCameraComponent()
 {
@@ -14,45 +17,47 @@ void UADigitalCameraComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RenderTargetIndexUpdatedDelegate.AddDynamic(this, &UADigitalCameraComponent::OnRenderTargetIndexUpdated);
+	TryFindPlayerController();
 }
+
+PRAGMA_DISABLE_OPTIMIZATION
 
 void UADigitalCameraComponent::TakePhoto()
 {
-	UTextureRenderTarget2D* RT = RenderTargets[RenderTargetIndex].LoadSynchronous();
-	if (!ensureMsgf(RT, TEXT("UADigitalCameraComponent::TakePhoto failed. RT was invalid.")))
+	if (!EnsureCanTakePhoto())
 	{
 		return;
 	}
 	
-	TextureTarget = RT;
-	CaptureScene();
-
-	// ====================================================
-	// TODO: Remove the following.
+	UTextureRenderTarget2D* RT = UKismetRenderingLibrary::CreateRenderTarget2D(this, RenderTargetWidth, RenderTargetHeight);
+	UASceneCaptureWidget* SceneCaptureWidget = CreateWidget<UASceneCaptureWidget>(
+		PlayerController.Get(),
+		SceneCaptureWidgetClass.LoadSynchronous(),
+		TEXT("SceneCaptureWidget")
+	);
 	
-	TextureTarget = LastPhotoRenderTarget.Get();
 	CaptureScene();
-	
-	// ====================================================
+	SceneCaptureWidget->AddToViewport();
 
-	UpdateRenderTargetIndex();
 	PhotoTakenDelegate.Broadcast();
 }
 
-void UADigitalCameraComponent::UpdateRenderTargetIndex()
+PRAGMA_ENABLE_OPTIMIZATION
+
+void UADigitalCameraComponent::TryFindPlayerController()
 {
-	const int32 PreviousRenderTargetIndex = RenderTargetIndex;
-	++RenderTargetIndex;
-
-	if (RenderTargetIndex > RenderTargets.Num() - 1)
-	{
-		RenderTargetIndex = 0;
-	}
-
-	RenderTargetIndexUpdatedDelegate.Broadcast(PreviousRenderTargetIndex);
+	// TODO: Should be taken from the GameMode.
+	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::TryFindPlayerController failed."));
 }
 
-void UADigitalCameraComponent::OnRenderTargetIndexUpdated(const int32 PreviousIndex)
+bool UADigitalCameraComponent::EnsureCanTakePhoto() const
 {
+	if (!ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. PlayerController is invalid.")) ||
+		!ensureMsgf(SceneCaptureWidgetClass.LoadSynchronous() != UASceneCaptureWidget::StaticClass(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. SceneCaptureWidgetClass has not been set.")))
+	{
+		return false;
+	}
+
+	return true;
 }
