@@ -2,7 +2,6 @@
 
 #include "ACameraCaptureComponent.h"
 
-#include "Engine/Classes/Engine/TextureRenderTarget2D.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetRenderingLibrary.h"
 #include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
