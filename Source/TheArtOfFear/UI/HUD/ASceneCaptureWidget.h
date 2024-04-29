@@ -7,6 +7,8 @@
 
 #include "ASceneCaptureWidget.generated.h"
 
+class UTextureRenderTarget2D;
+
 /**
  * Widget used to display scene captures created when the digital camera takes a photo.
  */
@@ -14,5 +16,14 @@ UCLASS()
 class THEARTOFFEAR_API UASceneCaptureWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+	// INTERFACE
+public:
+	void SetPhotoRender(UTextureRenderTarget2D* InPhotoRender);
+
+	// INTERNAL
+protected:
+	UPROPERTY(BlueprintReadOnly, Category="UASceneCaptureWidget|Internal")
+	UTextureRenderTarget2D* PhotoRender = nullptr;
 	
 };

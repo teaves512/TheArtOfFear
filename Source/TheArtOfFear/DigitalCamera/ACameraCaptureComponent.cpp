@@ -34,6 +34,7 @@ void UADigitalCameraComponent::TakePhoto()
 	);
 	
 	CaptureScene();
+	SceneCaptureWidget->SetPhotoRender(RT);
 	SceneCaptureWidget->AddToViewport();
 
 	PhotoTakenDelegate.Broadcast();
