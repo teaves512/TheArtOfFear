@@ -20,8 +20,6 @@ void UADigitalCameraComponent::BeginPlay()
 	TryFindPlayerController();
 }
 
-PRAGMA_DISABLE_OPTIMIZATION
-
 void UADigitalCameraComponent::TakePhoto()
 {
 	if (!EnsureCanTakePhoto())
@@ -42,8 +40,6 @@ void UADigitalCameraComponent::TakePhoto()
 	PhotoTakenDelegate.Broadcast();
 }
 
-PRAGMA_ENABLE_OPTIMIZATION
-
 void UADigitalCameraComponent::TryFindPlayerController()
 {
 	// TODO: Should be taken from the GameMode.
@@ -53,8 +49,12 @@ void UADigitalCameraComponent::TryFindPlayerController()
 
 bool UADigitalCameraComponent::EnsureCanTakePhoto() const
 {
-	if (!ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. PlayerController is invalid.")) ||
-		!ensureMsgf(SceneCaptureWidgetClass.LoadSynchronous() != UASceneCaptureWidget::StaticClass(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. SceneCaptureWidgetClass has not been set.")))
+	if (!ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. PlayerController is invalid.")))
+	{
+		return false;
+	}
+
+	if (!ensureMsgf(SceneCaptureWidgetClass.LoadSynchronous() != UASceneCaptureWidget::StaticClass(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. SceneCaptureWidgetClass has not been set.")))
 	{
 		return false;
 	}
