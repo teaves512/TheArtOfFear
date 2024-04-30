@@ -39,6 +39,8 @@ protected:
 	void OnInput_Jump(const FInputActionValue& Value);
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnInput_TakePhoto(const FInputActionValue& Value);
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnInput_ToggleCamera(const FInputActionValue& Value);
 	void OnInput_Interact(const FInputActionValue& Value);
 	void OnInput_Pause(const FInputActionValue& Value);
 
@@ -65,6 +67,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Movement")
 	float MaxSprintSpeed = 1000.0f;
 
+	/** Int to count how many photos have been taken */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int PhotosTaken = 0;
 	// COMPONENTS
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
