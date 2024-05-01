@@ -11,6 +11,7 @@
 #include "InputMappingContext.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "TheArtOfFear/Health/AHealthComponent.h"
 
 AAPlayerCharacter::AAPlayerCharacter()
 {
@@ -19,6 +20,8 @@ AAPlayerCharacter::AAPlayerCharacter()
 
 	DigitalCameraComp = CreateDefaultSubobject<UADigitalCameraComponent>(TEXT("DigitalCameraComp"));
 	DigitalCameraComp->SetupAttachment(CameraComp);
+
+	HealthComponent = CreateDefaultSubobject<UAHealthComponent>(TEXT("HealthComponent"));
 }
 void AAPlayerCharacter::BeginPlay()
 {
@@ -155,4 +158,9 @@ bool AAPlayerCharacter::TryFindPlayerController()
 {
 	PlayerController = Cast<AAPlayerController>(GetController());
 	return PlayerController.IsValid();
+}
+
+UAHealthComponent* AAPlayerCharacter::GetHealthComponent_Implementation()
+{
+	return HealthComponent.Get();
 }

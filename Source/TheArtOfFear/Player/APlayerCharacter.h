@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "GameFramework/Character.h"
+#include "TheArtOfFear/Health/IAHealthComponentInterface.h"
 
 #include "APlayerCharacter.generated.h"
 
 class UADigitalCameraComponent;
+class UAHealthComponent;
 class UAInputConfigData;
 class UCameraComponent;
 class UInputMappingContext;
@@ -18,7 +20,7 @@ struct FInputActionValue;
  * The base class for The Art of Fear's custom player character.
  */
 UCLASS()
-class THEARTOFFEAR_API AAPlayerCharacter : public ACharacter
+class THEARTOFFEAR_API AAPlayerCharacter : public ACharacter, public IIAHealthComponentInterface
 {
 	GENERATED_BODY()
 
@@ -47,6 +49,10 @@ protected:
 
 	bool TryFindPlayerController();
 
+	// HEALTH COMPONENT INTERFACE
+protected:
+	virtual UAHealthComponent* GetHealthComponent_Implementation() override;
+
 	// PARAMS
 protected:
 	/** The input mapping context used by this player character. */
@@ -72,6 +78,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
 	TObjectPtr<UADigitalCameraComponent> DigitalCameraComp = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
+	TObjectPtr<UAHealthComponent> HealthComponent = nullptr;
 
 	// INTERNAL
 protected:
