@@ -43,9 +43,21 @@ protected:
 	void OnInput_TakePhoto(const FInputActionValue& Value);
 	void OnInput_Interact(const FInputActionValue& Value);
 	void OnInput_Pause(const FInputActionValue& Value);
-
+	void OnInput_Flashlight(const FInputActionValue& Value);
+	void OnInput_StartHoldCamera(const FInputActionValue& Value);
+	void OnInput_EndHoldCamera(const FInputActionValue& Value);
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayerMakeNoise();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ToggleFlashlight();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName="StartHoldCamera")
+	void StartHoldCamera_BP();
+	
+	UFUNCTION(BlueprintImplementableEvent, DisplayName="EndHoldCamera")
+	void EndHoldCamera_BP();
 
 	bool TryFindPlayerController();
 
@@ -88,5 +100,7 @@ protected:
 	
 private:
 	float InitialMaxWalkSpeed = 0.0f;
+
+	bool bHoldingCamera = false;
 
 };

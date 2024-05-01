@@ -56,6 +56,10 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputTakePhoto.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
 	PEI->BindAction(InputActions.Get()->InputInteract.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Interact);
 	PEI->BindAction(InputActions.Get()->InputPause.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Pause);
+	PEI->BindAction(InputActions.Get()->InputFlashlight.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Flashlight);
+	PEI->BindAction(InputActions.Get()->InputHoldCamera.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_StartHoldCamera);
+	PEI->BindAction(InputActions.Get()->InputHoldCamera.LoadSynchronous(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndHoldCamera);
+	PEI->BindAction(InputActions.Get()->InputHoldCamera.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndHoldCamera);
 }
 
 void AAPlayerCharacter::Tick(float DeltaTime)
@@ -134,7 +138,10 @@ void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
 
 void AAPlayerCharacter::OnInput_TakePhoto(const FInputActionValue& Value)
 {
-	DigitalCameraComp->TakePhoto();
+	if (bHoldingCamera)
+	{
+		DigitalCameraComp->TakePhoto();
+	}
 }
 
 void AAPlayerCharacter::OnInput_Interact(const FInputActionValue& Value)
@@ -152,6 +159,25 @@ void AAPlayerCharacter::OnInput_Pause(const FInputActionValue& Value)
 	}
 
 	PlayerController->RequestTogglePause();
+}
+
+void AAPlayerCharacter::OnInput_Flashlight(const FInputActionValue& Value)
+{
+	ToggleFlashlight();
+}
+
+void AAPlayerCharacter::OnInput_StartHoldCamera(const FInputActionValue& Value)
+{
+	bHoldingCamera = true;
+	
+	StartHoldCamera_BP();
+}
+
+void AAPlayerCharacter::OnInput_EndHoldCamera(const FInputActionValue& Value)
+{
+	bHoldingCamera = false;
+	
+	EndHoldCamera_BP();
 }
 
 bool AAPlayerCharacter::TryFindPlayerController()

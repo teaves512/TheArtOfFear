@@ -10,6 +10,7 @@ UADigitalCameraComponent::UADigitalCameraComponent()
 {
 	bCaptureEveryFrame = false;
 	bCaptureOnMovement = false;
+	bAlwaysPersistRenderingState = true;
 }
 
 void UADigitalCameraComponent::BeginPlay()
@@ -25,14 +26,15 @@ void UADigitalCameraComponent::TakePhoto()
 	{
 		return;
 	}
-	
+
 	UTextureRenderTarget2D* RT = UKismetRenderingLibrary::CreateRenderTarget2D(this, RenderTargetWidth, RenderTargetHeight);
 	UASceneCaptureWidget* SceneCaptureWidget = CreateWidget<UASceneCaptureWidget>(
 		PlayerController.Get(),
 		SceneCaptureWidgetClass.LoadSynchronous(),
 		TEXT("SceneCaptureWidget")
 	);
-	
+
+	TextureTarget = RT;
 	CaptureScene();
 	SceneCaptureWidget->SetPhotoRender(RT);
 	SceneCaptureWidget->AddToViewport();
