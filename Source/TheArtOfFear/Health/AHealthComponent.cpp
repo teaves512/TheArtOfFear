@@ -88,7 +88,7 @@ void UAHealthComponent::InvokeHealthRegen()
 {
 	GetWorld()->GetTimerManager().ClearTimer(RegenDelayTimerHandle);
 	
-	if (RegenDelay > 0.0f)
+	if (RegenDelay > 0.0f)//
 	{
 		// Delay before enabling tick.
 		FTimerDelegate RegenDelayTimerDelegate;

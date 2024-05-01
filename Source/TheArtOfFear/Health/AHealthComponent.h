@@ -81,7 +81,7 @@ protected:
 	// INTERNAL
 private:
 	/** When alive, the component is active. */
-	bool bAlive = true;
+	bool bAlive = true;//
 	
 	/** The remaining amount of damage that the owner of this component can survive. */
 	float Health = 0.0f;
