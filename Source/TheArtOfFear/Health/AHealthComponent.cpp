@@ -21,8 +21,6 @@ void UAHealthComponent::BeginPlay()
 void UAHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	check(bAlive);
 	
 	RegenHealthOverTime(DeltaTime);
 }
@@ -64,9 +62,7 @@ void UAHealthComponent::SetAlive(const bool bNewAlive)
 }
 
 void UAHealthComponent::RegenHealthOverTime(const float& DeltaTime)
-{
-	check(bAlive);
-	
+{	
 	const float RestoredHealth = RegenRate * DeltaTime;
 	Health = FMath::Clamp(Health + RestoredHealth, 0.0f, MaxHealth);
 
@@ -79,8 +75,6 @@ void UAHealthComponent::RegenHealthOverTime(const float& DeltaTime)
 
 void UAHealthComponent::DamageReceivedCallback(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	check(bAlive);
-
 	SetComponentTickEnabled(false);
 	SetHealth(Health - Damage);
 	InvokeHealthRegen();
@@ -88,8 +82,6 @@ void UAHealthComponent::DamageReceivedCallback(AActor* DamagedActor, float Damag
 
 void UAHealthComponent::InvokeHealthRegen()
 {
-	check(bAlive);
-
 	GetWorld()->GetTimerManager().ClearTimer(RegenDelayTimerHandle);
 	
 	if (RegenDelay > 0.0f)
