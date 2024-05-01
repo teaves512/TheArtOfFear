@@ -8,8 +8,6 @@
 
 #include "APlayerController.generated.h"
 
-class UAPauseMenuContainer;
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPauseMenuVisibilityChangedDelegate, bool, bIsVisible);
 
 /**
@@ -39,11 +37,11 @@ protected:
 	// PARAMS
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="APlayerController|Params")
-	TSubclassOf<UAPauseMenuContainer> PauseMenuContainerClass = UAPauseMenuContainer::StaticClass();
+	TSubclassOf<UUserWidget> PauseMenuContainerClass = UAPauseMenuContainer::StaticClass();
 	
 	// INTERNAL
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerController|Internal")
-	TWeakObjectPtr<UAPauseMenuContainer> PauseMenuContainer = nullptr;
+	TWeakObjectPtr<UUserWidget> PauseMenuContainer = nullptr;
 	
 };

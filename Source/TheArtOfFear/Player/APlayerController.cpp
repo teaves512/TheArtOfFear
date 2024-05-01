@@ -41,11 +41,11 @@ void AAPlayerController::HidePauseMenu()
 
 bool AAPlayerController::TryCreatePauseMenuContainer()
 {
-	if (!ensureMsgf(PauseMenuContainerClass != UAPauseMenuContainer::StaticClass(), TEXT("AAPlayerController::TryCreatePauseMenuContainer failed. PauseMenuContainerClass has not been set.")))
+	if (!ensureMsgf(PauseMenuContainerClass != UUserWidget::StaticClass(), TEXT("AAPlayerController::TryCreatePauseMenuContainer failed. PauseMenuContainerClass has not been set.")))
 	{
 		return false;
 	}
 	
-	PauseMenuContainer = CreateWidget<UAPauseMenuContainer>(this, PauseMenuContainerClass);
+	PauseMenuContainer = CreateWidget<UUserWidget>(this, PauseMenuContainerClass);
 	return PauseMenuContainer.IsValid();
 }
