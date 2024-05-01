@@ -2,6 +2,7 @@
 
 #include "APlayerCharacter.h"
 
+#include "TheArtOfFear/DigitalCamera/ACameraCaptureComponent.h"
 #include "APlayerController.h"
 #include "EnhancedInput/Public/EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -13,10 +14,11 @@
 
 AAPlayerCharacter::AAPlayerCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false; // TODO: This must be enable when Tick is in use.
-
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(RootComponent);
+
+	DigitalCameraComp = CreateDefaultSubobject<UADigitalCameraComponent>(TEXT("DigitalCameraComp"));
+	DigitalCameraComp->SetupAttachment(CameraComp);
 }
 void AAPlayerCharacter::BeginPlay()
 {
@@ -126,6 +128,11 @@ void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
 {
 	Jump();
+}
+
+void AAPlayerCharacter::OnInput_TakePhoto(const FInputActionValue& Value)
+{
+	DigitalCameraComp->TakePhoto();
 }
 
 void AAPlayerCharacter::OnInput_Interact(const FInputActionValue& Value)
