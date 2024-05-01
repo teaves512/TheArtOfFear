@@ -15,7 +15,6 @@ void UAHealthComponent::BeginPlay()
 
 	SetComponentTickEnabled(false);
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UAHealthComponent::DamageReceivedCallback);
-	OnAliveChanged.AddDynamic(this, &UAHealthComponent::AliveChangedCallback);
 }
 
 void UAHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -59,6 +58,11 @@ void UAHealthComponent::SetAlive(const bool bNewAlive)
 	const bool bWasAlive = bAlive;
 	bAlive = bNewAlive;
 	OnAliveChanged.Broadcast(bWasAlive, bAlive);
+
+	if (bAlive == false)
+	{
+		Death();
+	}
 }
 
 void UAHealthComponent::RegenHealthOverTime(const float& DeltaTime)
@@ -98,16 +102,12 @@ void UAHealthComponent::InvokeHealthRegen()
 	}
 }
 
-void UAHealthComponent::AliveChangedCallback(const bool bWasAlive, const bool bIsAlive)
+void UAHealthComponent::Death()
 {
-	// On death...
-	if (bAlive == false)
-	{
-		// Stop health from regenerating.
-		GetWorld()->GetTimerManager().ClearTimer(RegenDelayTimerHandle);
-		SetComponentTickEnabled(false);
+	// Stop health from regenerating.
+	GetWorld()->GetTimerManager().ClearTimer(RegenDelayTimerHandle);
+	SetComponentTickEnabled(false);
 
-		// Prevent further damage.
-		GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UAHealthComponent::DamageReceivedCallback);
-	}
+	// Prevent further damage.
+	GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UAHealthComponent::DamageReceivedCallback);
 }

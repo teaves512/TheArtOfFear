@@ -53,8 +53,8 @@ protected:
 	/** Sets off a timer to enable the component's tick function, allowing for health to regenerate. */
 	void InvokeHealthRegen();
 
-	/** Called when the Health reaches a value of 0 and the owner of this component is dead. */
-	void AliveChangedCallback(const bool bWasAlive, const bool bIsAlive);
+	/** Called when the owner of this component dies. */
+	void Death();
 
 	/** Broadcast when the health of the owner of this component changes. */
 	UPROPERTY(BlueprintAssignable, Category="AHealthComponent")
