@@ -54,7 +54,7 @@ protected:
 	void InvokeHealthRegen();
 
 	/** Called when the Health reaches a value of 0 and the owner of this component is dead. */
-	void Death();
+	void AliveChangedCallback(const bool bWasAlive, const bool bIsAlive);
 
 	/** Broadcast when the health of the owner of this component changes. */
 	UPROPERTY(BlueprintAssignable, Category="AHealthComponent")
