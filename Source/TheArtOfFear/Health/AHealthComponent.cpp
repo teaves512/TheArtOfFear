@@ -11,6 +11,8 @@ void UAHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetHealth(MaxHealth);
+
 	SetComponentTickEnabled(false);
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UAHealthComponent::DamageReceivedCallback);
 	OnAliveChanged.AddDynamic(this, &UAHealthComponent::AliveChangedCallback);
