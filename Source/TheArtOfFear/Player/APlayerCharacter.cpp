@@ -2,6 +2,8 @@
 
 #include "APlayerCharacter.h"
 
+#include "TheArtOfFear/DigitalCamera/ACameraCaptureComponent.h"
+#include "APlayerController.h"
 #include "EnhancedInput/Public/EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Input/AInputConfigData.h"
@@ -9,13 +11,17 @@
 #include "InputMappingContext.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "TheArtOfFear/Health/AHealthComponent.h"
 
 AAPlayerCharacter::AAPlayerCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false; // TODO: This must be enable when Tick is in use.
-
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(RootComponent);
+
+	DigitalCameraComp = CreateDefaultSubobject<UADigitalCameraComponent>(TEXT("DigitalCameraComp"));
+	DigitalCameraComp->SetupAttachment(CameraComp);
+
+	HealthComponent = CreateDefaultSubobject<UAHealthComponent>(TEXT("HealthComponent"));
 }
 void AAPlayerCharacter::BeginPlay()
 {
@@ -48,6 +54,12 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputJump.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
 	PEI->BindAction(InputActions.Get()->InputTakePhoto.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
+	PEI->BindAction(InputActions.Get()->InputInteract.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Interact);
+	PEI->BindAction(InputActions.Get()->InputPause.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Pause);
+	PEI->BindAction(InputActions.Get()->InputFlashlight.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Flashlight);
+	PEI->BindAction(InputActions.Get()->InputHoldCamera.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_StartHoldCamera);
+	PEI->BindAction(InputActions.Get()->InputHoldCamera.LoadSynchronous(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndHoldCamera);
+	PEI->BindAction(InputActions.Get()->InputHoldCamera.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndHoldCamera);
 }
 
 void AAPlayerCharacter::Tick(float DeltaTime)
@@ -122,4 +134,59 @@ void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
 {
 	Jump();
+}
+
+void AAPlayerCharacter::OnInput_TakePhoto(const FInputActionValue& Value)
+{
+	if (bHoldingCamera)
+	{
+		DigitalCameraComp->TakePhoto();
+	}
+}
+
+void AAPlayerCharacter::OnInput_Interact(const FInputActionValue& Value)
+{
+}
+
+void AAPlayerCharacter::OnInput_Pause(const FInputActionValue& Value)
+{
+	if (PlayerController.IsValid() == false)
+	{
+		if (!ensureMsgf(TryFindPlayerController(), TEXT("AAPlayerCharacter::OnInput_Interact failed because PlayerController was invalid and failed to instantiate.")))
+		{
+			return;
+		}
+	}
+
+	PlayerController->RequestTogglePause();
+}
+
+void AAPlayerCharacter::OnInput_Flashlight(const FInputActionValue& Value)
+{
+	ToggleFlashlight();
+}
+
+void AAPlayerCharacter::OnInput_StartHoldCamera(const FInputActionValue& Value)
+{
+	bHoldingCamera = true;
+	
+	StartHoldCamera_BP();
+}
+
+void AAPlayerCharacter::OnInput_EndHoldCamera(const FInputActionValue& Value)
+{
+	bHoldingCamera = false;
+	
+	EndHoldCamera_BP();
+}
+
+bool AAPlayerCharacter::TryFindPlayerController()
+{
+	PlayerController = Cast<AAPlayerController>(GetController());
+	return PlayerController.IsValid();
+}
+
+UAHealthComponent* AAPlayerCharacter::GetHealthComponent_Implementation()
+{
+	return HealthComponent.Get();
 }

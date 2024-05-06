@@ -5,9 +5,12 @@
 #include "CoreMinimal.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "GameFramework/Character.h"
+#include "TheArtOfFear/Health/IAHealthComponentInterface.h"
 
 #include "APlayerCharacter.generated.h"
 
+class UADigitalCameraComponent;
+class UAHealthComponent;
 class UAInputConfigData;
 class UCameraComponent;
 class UInputMappingContext;
@@ -17,9 +20,11 @@ struct FInputActionValue;
  * The base class for The Art of Fear's custom player character.
  */
 UCLASS()
-class THEARTOFFEAR_API AAPlayerCharacter : public ACharacter
+class THEARTOFFEAR_API AAPlayerCharacter : public ACharacter, public IIAHealthComponentInterface
 {
 	GENERATED_BODY()
+
+	friend class AAPlayerController;
 
 	// OVERRIDES
 protected:
@@ -35,11 +40,30 @@ protected:
 	void OnInput_StartSprint(const FInputActionValue& Value);
 	void OnInput_EndSprint(const FInputActionValue& Value);
 	void OnInput_Jump(const FInputActionValue& Value);
-	UFUNCTION(BlueprintImplementableEvent)
 	void OnInput_TakePhoto(const FInputActionValue& Value);
-
+	void OnInput_Interact(const FInputActionValue& Value);
+	void OnInput_Pause(const FInputActionValue& Value);
+	void OnInput_Flashlight(const FInputActionValue& Value);
+	void OnInput_StartHoldCamera(const FInputActionValue& Value);
+	void OnInput_EndHoldCamera(const FInputActionValue& Value);
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayerMakeNoise();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ToggleFlashlight();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName="StartHoldCamera")
+	void StartHoldCamera_BP();
+	
+	UFUNCTION(BlueprintImplementableEvent, DisplayName="EndHoldCamera")
+	void EndHoldCamera_BP();
+
+	bool TryFindPlayerController();
+
+	// HEALTH COMPONENT INTERFACE
+protected:
+	virtual UAHealthComponent* GetHealthComponent_Implementation() override;
 
 	// PARAMS
 protected:
@@ -64,8 +88,19 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
 	TObjectPtr<UCameraComponent> CameraComp = nullptr;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
+	TObjectPtr<UADigitalCameraComponent> DigitalCameraComp = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
+	TObjectPtr<UAHealthComponent> HealthComponent = nullptr;
+
 	// INTERNAL
+protected:
+	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
+	
 private:
 	float InitialMaxWalkSpeed = 0.0f;
+
+	bool bHoldingCamera = false;
 
 };
