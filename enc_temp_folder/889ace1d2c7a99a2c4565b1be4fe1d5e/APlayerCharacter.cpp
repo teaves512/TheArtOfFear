@@ -96,7 +96,7 @@ void AAPlayerCharacter::OnInput_Move(const FInputActionValue& Value)
 			AddMovementInput(Direction, MoveValue.X);
 		}
 
-		PlayerMoving();
+		PlayerMakeNoise();
 	}
 }
 
@@ -126,13 +126,11 @@ void AAPlayerCharacter::OnInput_Look(const FInputActionValue& Value)
 void AAPlayerCharacter::OnInput_StartSprint(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
-	StartSprint_BP();
 }
 
 void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
-	EndSprint_BP();
 }
 
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
