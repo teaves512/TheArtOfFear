@@ -52,7 +52,6 @@ void AAPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_StartSprint);
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Completed, this, &AAPlayerCharacter::OnInput_EndSprint);
 	PEI->BindAction(InputActions.Get()->InputSprint.LoadSynchronous(), ETriggerEvent::Canceled, this, &AAPlayerCharacter::OnInput_EndSprint);
-	PEI->BindAction(InputActions.Get()->InputJump.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Jump);
 	PEI->BindAction(InputActions.Get()->InputTakePhoto.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_TakePhoto);
 	PEI->BindAction(InputActions.Get()->InputInteract.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Interact);
 	PEI->BindAction(InputActions.Get()->InputPause.LoadSynchronous(), ETriggerEvent::Started, this, &AAPlayerCharacter::OnInput_Pause);
@@ -129,11 +128,6 @@ void AAPlayerCharacter::OnInput_StartSprint(const FInputActionValue& Value)
 void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
-}
-
-void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)
-{
-	Jump();
 }
 
 void AAPlayerCharacter::OnInput_TakePhoto(const FInputActionValue& Value)
