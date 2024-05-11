@@ -47,7 +47,7 @@ protected:
 	void OnInput_EndHoldCamera(const FInputActionValue& Value);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void PlayerMakeNoise();
+	void PlayerMoving();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ToggleFlashlight();
@@ -57,6 +57,12 @@ protected:
 	
 	UFUNCTION(BlueprintImplementableEvent, DisplayName="EndHoldCamera")
 	void EndHoldCamera_BP();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "StartSprint")
+	void StartSprint_BP();
+
+	UFUNCTION(BlueprintImplementableEvent, DisplayName = "EndSprint")
+	void EndSprint_BP();
 
 	bool TryFindPlayerController();
 
