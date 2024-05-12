@@ -18,6 +18,8 @@ AAPlayerCharacter::AAPlayerCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(RootComponent);
 
+	GetMesh()->SetupAttachment(CameraComp);
+
 	DigitalCameraComp = CreateDefaultSubobject<UADigitalCameraComponent>(TEXT("DigitalCameraComp"));
 	DigitalCameraComp->SetupAttachment(CameraComp);
 
@@ -94,7 +96,7 @@ void AAPlayerCharacter::OnInput_Move(const FInputActionValue& Value)
 			AddMovementInput(Direction, MoveValue.X);
 		}
 
-		PlayerMakeNoise();
+		PlayerMoving();
 	}
 }
 
@@ -124,11 +126,13 @@ void AAPlayerCharacter::OnInput_Look(const FInputActionValue& Value)
 void AAPlayerCharacter::OnInput_StartSprint(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+	StartSprint_BP();
 }
 
 void AAPlayerCharacter::OnInput_EndSprint(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = InitialMaxWalkSpeed;
+	EndSprint_BP();
 }
 
 void AAPlayerCharacter::OnInput_Jump(const FInputActionValue& Value)

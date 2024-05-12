@@ -68,7 +68,7 @@ void UAHealthComponent::SetAlive(const bool bNewAlive)
 void UAHealthComponent::RegenHealthOverTime(const float& DeltaTime)
 {	
 	const float RestoredHealth = RegenRate * DeltaTime;
-	Health = FMath::Clamp(Health + RestoredHealth, 0.0f, MaxHealth);
+	SetHealth(Health + RestoredHealth);
 
 	if (FMath::IsNearlyEqual(Health, MaxHealth))
 	{
@@ -88,12 +88,12 @@ void UAHealthComponent::InvokeHealthRegen()
 {
 	GetWorld()->GetTimerManager().ClearTimer(RegenDelayTimerHandle);
 	
-	if (RegenDelay > 0.0f)//
+	if (RegenDelay > 0.0f)
 	{
 		// Delay before enabling tick.
 		FTimerDelegate RegenDelayTimerDelegate;
 		RegenDelayTimerDelegate.BindUFunction(this, "SetComponentTickEnabled", true);
-		GetWorld()->GetTimerManager().SetTimer(RegenDelayTimerHandle, RegenDelayTimerDelegate, RegenDelay, false);		
+		GetWorld()->GetTimerManager().SetTimer(RegenDelayTimerHandle, RegenDelayTimerDelegate, RegenDelay, false);
 	}
 	else
 	{

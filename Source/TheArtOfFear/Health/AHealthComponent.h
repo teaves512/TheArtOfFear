@@ -68,15 +68,15 @@ protected:
 protected:
 	/** The maximum amount of damage the owner of this component can survive. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AHealthComponent", meta=(ClampMin=0))
-	float MaxHealth = 100.0f;
+	float MaxHealth = 150.0f;
 
 	/** The amount of time between receiving damage and when health starts regenerating. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AHealthComponent", meta=(ClampMin=0))
-	float RegenDelay = 100.0f;
+	float RegenDelay = 3.0f;
 
 	/** The amount of health to regenerate every second. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AHealthComponent", meta=(ClampMin=0))
-	float RegenRate = 10.0f;
+	float RegenRate = 50.0f;
 
 	// INTERNAL
 private:
