@@ -18,10 +18,11 @@ AAPlayerCharacter::AAPlayerCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(RootComponent);
 
-	GetMesh()->SetupAttachment(CameraComp);
+	CameraMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CameraMeshComp"));
+	CameraMeshComp->SetupAttachment(CameraComp);
 
 	DigitalCameraComp = CreateDefaultSubobject<UADigitalCameraComponent>(TEXT("DigitalCameraComp"));
-	DigitalCameraComp->SetupAttachment(CameraComp);
+	DigitalCameraComp->SetupAttachment(CameraMeshComp);
 
 	HealthComponent = CreateDefaultSubobject<UAHealthComponent>(TEXT("HealthComponent"));
 }
