@@ -12,6 +12,7 @@ class UASceneCaptureWidget;
 class UTextureRenderTarget2D;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPhotoTakenDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCameraCooldownDelegate);
 
 /**
  * Uses scene capture to export screenshots of the viewport to a render texture.
@@ -37,12 +38,19 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="ADigitalCameraComponent|Interface")
 	FPhotoTakenDelegate PhotoTakenDelegate;
 
+	/** Broadcast when the camera cooldown is complete. */
+	UPROPERTY(BlueprintAssignable, Category="ADigitalCameraComponent|Interface")
+	FCameraCooldownDelegate CameraCooldownDelegate;
+
 protected:
 	/** Find the PlayerController that owns the pawn that this component is attached to. */
 	void TryFindPlayerController();
 
 	/** Returns true if can take photo, false if not. */
 	bool EnsureCanTakePhoto() const;
+
+	/** Broadcasts CameraCooldownDelegate. */
+	void FinishCameraCooldown();
 
 	// PARAMS
 protected:
@@ -57,9 +65,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
 	TSoftClassPtr<UASceneCaptureWidget> SceneCaptureWidgetClass = UASceneCaptureWidget::StaticClass();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
+	float PhotoCooldownTime = 1.0f;
+
 	// INTERNAL
 private:
 	/** The player controller that owns the pawn that this component is attached to. */
 	TWeakObjectPtr<APlayerController> PlayerController = nullptr;
+	
+	FTimerHandle CooldownTimerHandle;
 	
 };
