@@ -39,6 +39,8 @@ protected:
 	void OnInput_Look(const FInputActionValue& Value);
 	void OnInput_StartSprint(const FInputActionValue& Value);
 	void OnInput_EndSprint(const FInputActionValue& Value);
+	void StaminaDecrease();
+	void StaminaIncrease();
 	void OnInput_TakePhoto(const FInputActionValue& Value);
 	void OnInput_Interact(const FInputActionValue& Value);
 	void OnInput_Pause(const FInputActionValue& Value);
@@ -108,4 +110,9 @@ private:
 
 	bool bHoldingCamera = false;
 
+	FTimerHandle StaminaTimer;
+
+	float StaminaCurrent = 100.f;
+
+	float StaminaMax = 100.f;
 };
