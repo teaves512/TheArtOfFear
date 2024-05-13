@@ -22,8 +22,13 @@ class THEARTOFFEAR_API UAPhotoGallery : public UUserWidget
 public:
 	void AddPhotoRender(UTextureRenderTarget2D* InPhotoRender);
 
-	// INTERFACE
 protected:
-	//...
+	UFUNCTION(BlueprintImplementableEvent, Category="UAPhotoGallery|Interface")
+	void OnPhotoRenderAdded(UTextureRenderTarget2D* InPhotoRender);
+
+	// INTERNAL
+protected:
+	UPROPERTY(BlueprintReadOnly, Category="UAPhotoGallery|Internal")
+	TArray<UTextureRenderTarget2D*> PhotoRenders;
 	
 };

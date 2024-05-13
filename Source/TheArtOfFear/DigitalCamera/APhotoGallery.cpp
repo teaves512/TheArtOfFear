@@ -4,5 +4,9 @@
 
 void UAPhotoGallery::AddPhotoRender(UTextureRenderTarget2D* InPhotoRender)
 {
-	
+	if (ensureMsgf(InPhotoRender, TEXT("UAPhotoGallery::AddPhotoRender failed. InPhotoRender was invalid.")))
+	{
+		PhotoRenders.Emplace(InPhotoRender);
+		OnPhotoRenderAdded(InPhotoRender);
+	}
 }
