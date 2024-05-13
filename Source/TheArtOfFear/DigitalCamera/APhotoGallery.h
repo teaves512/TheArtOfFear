@@ -20,7 +20,7 @@ class THEARTOFFEAR_API UAPhotoGallery : public UUserWidget
 
 	// INTERFACE
 public:
-	void SetPhotoRender(UTextureRenderTarget2D* InPhotoRender);
+	void AddPhotoRender(UTextureRenderTarget2D* InPhotoRender);
 
 	// INTERFACE
 protected:

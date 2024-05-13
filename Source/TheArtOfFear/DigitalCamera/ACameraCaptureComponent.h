@@ -35,6 +35,10 @@ public:
 	/** Captures the scene view and applies the viewport to the specified render texture. Broadcasts OnCameraCaptures. */
 	UFUNCTION(BlueprintCallable, Category="ADigitalCameraComponent|Interface")
 	void TakePhoto();
+
+	/** Broadcast just before the screen capture is taken. */
+	UPROPERTY(BlueprintAssignable, Category="ADigitalCameraComponent|Interface")
+	FPhotoTakenDelegate PhotoSetupDelegate;
 	
 	/** Broadcast when the camera captures the scene. */
 	UPROPERTY(BlueprintAssignable, Category="ADigitalCameraComponent|Interface")

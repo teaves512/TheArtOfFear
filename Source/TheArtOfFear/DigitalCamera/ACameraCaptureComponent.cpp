@@ -33,6 +33,8 @@ void UADigitalCameraComponent::TakePhoto()
 		return;
 	}
 
+	PhotoSetupDelegate.Broadcast();
+
 	UTextureRenderTarget2D* RT = UKismetRenderingLibrary::CreateRenderTarget2D(this, RenderTargetWidth, RenderTargetHeight);
 	UASceneCaptureWidget* SceneCaptureWidget = CreateWidget<UASceneCaptureWidget>(
 		PlayerController.Get(),
