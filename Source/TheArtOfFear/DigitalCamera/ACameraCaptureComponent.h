@@ -3,12 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "APhotoGallery.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
 
 #include "ACameraCaptureComponent.generated.h"
 
 class UASceneCaptureWidget;
+class UAPhotoGallery;
 class UTextureRenderTarget2D;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPhotoTakenDelegate);
@@ -66,6 +68,9 @@ protected:
 	TSoftClassPtr<UASceneCaptureWidget> SceneCaptureWidgetClass = UASceneCaptureWidget::StaticClass();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
+	TSoftClassPtr<UAPhotoGallery> PhotoGalleryWidgetClass = UAPhotoGallery::StaticClass();
+  
+  UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
 	float PhotoCooldownTime = 1.0f;
 
 	// INTERNAL
