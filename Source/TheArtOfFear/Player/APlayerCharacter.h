@@ -98,6 +98,9 @@ protected:
 	TObjectPtr<UADigitalCameraComponent> DigitalCameraComp = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
+	TObjectPtr<UStaticMeshComponent> CameraMeshComp = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerCharacter|Components")
 	TObjectPtr<UAHealthComponent> HealthComponent = nullptr;
 
 	// INTERNAL
