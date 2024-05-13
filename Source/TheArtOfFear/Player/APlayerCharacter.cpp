@@ -21,6 +21,8 @@ AAPlayerCharacter::AAPlayerCharacter()
 	CameraMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CameraMeshComp"));
 	CameraMeshComp->SetupAttachment(CameraComp);
 
+	GetMesh()->SetupAttachment(CameraComp);
+
 	DigitalCameraComp = CreateDefaultSubobject<UADigitalCameraComponent>(TEXT("DigitalCameraComp"));
 	DigitalCameraComp->SetupAttachment(CameraMeshComp);
 
