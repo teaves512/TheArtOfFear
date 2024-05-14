@@ -2,6 +2,7 @@
 
 #include "ACameraCaptureComponent.h"
 
+#include "APhotoGallery.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetRenderingLibrary.h"
 #include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
@@ -48,6 +49,8 @@ void UADigitalCameraComponent::TakePhoto()
 	SceneCaptureWidget->AddToViewport();
 
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
+
+	RenderTargetGallery.Emplace(RT);
 
 	PhotoTakenDelegate.Broadcast();
 }

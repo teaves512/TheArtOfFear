@@ -39,7 +39,7 @@ protected:
 	void OnInput_Look(const FInputActionValue& Value);
 	void OnInput_StartSprint(const FInputActionValue& Value);
 	void OnInput_EndSprint(const FInputActionValue& Value);
-	void OnInput_Jump(const FInputActionValue& Value);
+	// void OnInput_Jump(const FInputActionValue& Value);
 	void OnInput_TakePhoto(const FInputActionValue& Value);
 	void OnInput_Interact(const FInputActionValue& Value);
 	void OnInput_Pause(const FInputActionValue& Value);
