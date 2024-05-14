@@ -4,16 +4,6 @@
 #include "TheArtOfFear/DigitalCamera/APhotoGallery.h"
 #include "TheArtOfFear/UI/Menus/APauseMenuContainer.h"
 
-void AAPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// if (TryCreatePhotoGallery())
-	// {
-	// 	PhotoGallery->AddToViewport();
-	// }
-}
-
 void AAPlayerController::RequestTogglePause()
 {
 	// TODO: Pause game through game mode.
@@ -50,15 +40,15 @@ void AAPlayerController::HidePauseMenu()
 	OnPauseMenuVisibilityChanged.Broadcast(false);
 }
 
-// UAPhotoGallery* AAPlayerController::GetPhotoGallery()
-// {
-// 	if (ensureMsgf(PhotoGallery.IsValid(), TEXT("AAPlayerController::GetPhotoGallery ")))
-// 	{
-// 		return PhotoGallery.Get();
-// 	}
-//
-// 	return nullptr;
-// }
+TArray<UTextureRenderTarget2D*>& AAPlayerController::GetPhotos()
+{
+	return RenderTargetGallery;
+}
+
+void AAPlayerController::AddPhoto(UTextureRenderTarget2D* InPhoto)
+{
+	RenderTargetGallery.Emplace(InPhoto);
+}
 
 bool AAPlayerController::TryCreatePauseMenuContainer()
 {
@@ -70,14 +60,3 @@ bool AAPlayerController::TryCreatePauseMenuContainer()
 	PauseMenuContainer = CreateWidget<UUserWidget>(this, PauseMenuContainerClass);
 	return PauseMenuContainer.IsValid();
 }
-
-// bool AAPlayerController::TryCreatePhotoGallery()
-// {
-// 	if (!ensureMsgf(PhotoGalleryClass != UAPhotoGallery::StaticClass(), TEXT("AAPlayerController::TryCreatePhotoGallery failed. PhotoGalleryClass has not been set.")))
-// 	{
-// 		return false;
-// 	}
-//
-// 	PhotoGallery = CreateWidget<UUserWidget>(this, PhotoGalleryClass);
-// 	return PhotoGallery.IsValid();
-// }

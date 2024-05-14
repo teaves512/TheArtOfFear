@@ -47,18 +47,16 @@ void UADigitalCameraComponent::TakePhoto()
 	CaptureScene();
 	SceneCaptureWidget->SetPhotoRender(RT);
 	SceneCaptureWidget->AddToViewport();
+	PlayerController->AddPhoto(RT);
 
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
-
-	RenderTargetGallery.Emplace(RT);
-
 	PhotoTakenDelegate.Broadcast();
 }
 
 void UADigitalCameraComponent::TryFindPlayerController()
 {
 	// TODO: Should be taken from the GameMode.
-	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PlayerController = Cast<AAPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::TryFindPlayerController failed."));
 }
 

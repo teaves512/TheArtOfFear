@@ -9,6 +9,7 @@
 
 #include "APhotoGallery.generated.h"
 
+class AAPlayerController;
 class UTextureRenderTarget2D;
 
 /**
@@ -21,28 +22,21 @@ class THEARTOFFEAR_API UAPhotoGallery : public UUserWidget
 	GENERATED_BODY()
 
 	// INTERFACE
-public:
-	void AddPhotoRender(UTextureRenderTarget2D* InPhotoRender);
-
-	void UpdateGallery();
-
 protected:
-	UFUNCTION(BlueprintImplementableEvent, Category="UAPhotoGallery|Interface")
-	void OnPhotoRenderAdded(UTextureRenderTarget2D* InPhotoRender);
+	UFUNCTION(BlueprintCallable, Category="UAPhotoGallery|Interface")
+	bool TryFindPlayerController();
 
 	// PARAMS
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UAPhotoGallery|Params")
 	TSubclassOf<UASceneCaptureWidget> SceneCaptureWidgetClass;
 
-	// SUBWIDGETS
+	// INTERNAL
 protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
 	TObjectPtr<UWrapBox> WrapBox_Gallery = nullptr;
-
-	// INTERNAL
-protected:
+	
 	UPROPERTY(BlueprintReadOnly, Category="UAPhotoGallery|Internal")
-	TArray<UTextureRenderTarget2D*> PhotoRenders;
+	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
 	
 };
