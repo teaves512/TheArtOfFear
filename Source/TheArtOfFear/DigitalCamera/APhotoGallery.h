@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/WrapBox.h"
 
 #include "APhotoGallery.generated.h"
 
@@ -22,8 +24,25 @@ class THEARTOFFEAR_API UAPhotoGallery : public UUserWidget
 public:
 	void AddPhotoRender(UTextureRenderTarget2D* InPhotoRender);
 
-	// INTERFACE
+	void UpdateGallery();
+
 protected:
-	//...
+	UFUNCTION(BlueprintImplementableEvent, Category="UAPhotoGallery|Interface")
+	void OnPhotoRenderAdded(UTextureRenderTarget2D* InPhotoRender);
+
+	// PARAMS
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UAPhotoGallery|Params")
+	TSubclassOf<UASceneCaptureWidget> SceneCaptureWidgetClass;
+
+	// SUBWIDGETS
+protected:
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UWrapBox> WrapBox_Gallery = nullptr;
+
+	// INTERNAL
+protected:
+	UPROPERTY(BlueprintReadOnly, Category="UAPhotoGallery|Internal")
+	TArray<UTextureRenderTarget2D*> PhotoRenders;
 	
 };

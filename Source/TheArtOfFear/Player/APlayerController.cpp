@@ -1,7 +1,18 @@
 // Produced by Lucky 13 (Team 13) for module GDEV60033, Staffordshire University.
 
 #include "APlayerController.h"
+#include "TheArtOfFear/DigitalCamera/APhotoGallery.h"
 #include "TheArtOfFear/UI/Menus/APauseMenuContainer.h"
+
+void AAPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// if (TryCreatePhotoGallery())
+	// {
+	// 	PhotoGallery->AddToViewport();
+	// }
+}
 
 void AAPlayerController::RequestTogglePause()
 {
@@ -39,9 +50,19 @@ void AAPlayerController::HidePauseMenu()
 	OnPauseMenuVisibilityChanged.Broadcast(false);
 }
 
+// UAPhotoGallery* AAPlayerController::GetPhotoGallery()
+// {
+// 	if (ensureMsgf(PhotoGallery.IsValid(), TEXT("AAPlayerController::GetPhotoGallery ")))
+// 	{
+// 		return PhotoGallery.Get();
+// 	}
+//
+// 	return nullptr;
+// }
+
 bool AAPlayerController::TryCreatePauseMenuContainer()
 {
-	if (!ensureMsgf(PauseMenuContainerClass != UUserWidget::StaticClass(), TEXT("AAPlayerController::TryCreatePauseMenuContainer failed. PauseMenuContainerClass has not been set.")))
+	if (!ensureMsgf(PauseMenuContainerClass != UAPauseMenuContainer::StaticClass(), TEXT("AAPlayerController::TryCreatePauseMenuContainer failed. PauseMenuContainerClass has not been set.")))
 	{
 		return false;
 	}
@@ -49,3 +70,14 @@ bool AAPlayerController::TryCreatePauseMenuContainer()
 	PauseMenuContainer = CreateWidget<UUserWidget>(this, PauseMenuContainerClass);
 	return PauseMenuContainer.IsValid();
 }
+
+// bool AAPlayerController::TryCreatePhotoGallery()
+// {
+// 	if (!ensureMsgf(PhotoGalleryClass != UAPhotoGallery::StaticClass(), TEXT("AAPlayerController::TryCreatePhotoGallery failed. PhotoGalleryClass has not been set.")))
+// 	{
+// 		return false;
+// 	}
+//
+// 	PhotoGallery = CreateWidget<UUserWidget>(this, PhotoGalleryClass);
+// 	return PhotoGallery.IsValid();
+// }
