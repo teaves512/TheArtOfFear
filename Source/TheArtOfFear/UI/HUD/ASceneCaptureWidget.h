@@ -19,6 +19,7 @@ class THEARTOFFEAR_API UASceneCaptureWidget : public UUserWidget
 
 	// INTERFACE
 public:
+	UFUNCTION(BlueprintCallable, Category="UASceneCaptureWidget|Interface")
 	void SetPhotoRender(UTextureRenderTarget2D* InPhotoRender);
 
 	// INTERNAL

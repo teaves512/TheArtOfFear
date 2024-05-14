@@ -2,33 +2,17 @@
 
 #include "APhotoGallery.h"
 
-void UAPhotoGallery::AddPhotoRender(UTextureRenderTarget2D* InPhotoRender)
+#include "Kismet/GameplayStatics.h"
+#include "TheArtOfFear/Player/APlayerController.h"
+
+bool UAPhotoGallery::TryFindPlayerController()
 {
-	if (ensureMsgf(InPhotoRender, TEXT("UAPhotoGallery::AddPhotoRender failed. InPhotoRender was invalid.")))
+	// TODO: Should be taken from the GameMode.
+	PlayerController = Cast<AAPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::TryFindPlayerController failed.")))
 	{
-		PhotoRenders.Emplace(InPhotoRender);
-		OnPhotoRenderAdded(InPhotoRender);
-
-		UpdateGallery();
+		return true;
 	}
-}
 
-void UAPhotoGallery::UpdateGallery()
-{
-	for (UWidget* Widget : WrapBox_Gallery->GetAllChildren())
-	{
-		Widget->RemoveFromParent();
-	}
-	
-	for (UTextureRenderTarget2D* RT : PhotoRenders)
-	{
-		UASceneCaptureWidget* SceneCaptureWidget = CreateWidget<UASceneCaptureWidget>(
-		this,
-		SceneCaptureWidgetClass,
-		TEXT("SceneCaptureWidget")
-		);
-
-		SceneCaptureWidget->SetPhotoRender(RT);
-		WrapBox_Gallery->AddChildToWrapBox(SceneCaptureWidget);
-	}
+	return false;
 }
