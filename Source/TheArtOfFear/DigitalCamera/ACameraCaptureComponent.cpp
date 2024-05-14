@@ -27,6 +27,14 @@ void UADigitalCameraComponent::TakePhoto()
 		return;
 	}
 
+	// If the cooldown has not complete, don't take a photo.
+	if (CooldownTimerHandle.IsValid())
+	{
+		return;
+	}
+
+	PhotoSetupDelegate.Broadcast();
+
 	UTextureRenderTarget2D* RT = UKismetRenderingLibrary::CreateRenderTarget2D(this, RenderTargetWidth, RenderTargetHeight);
 	UASceneCaptureWidget* SceneCaptureWidget = CreateWidget<UASceneCaptureWidget>(
 		PlayerController.Get(),
@@ -38,6 +46,8 @@ void UADigitalCameraComponent::TakePhoto()
 	CaptureScene();
 	SceneCaptureWidget->SetPhotoRender(RT);
 	SceneCaptureWidget->AddToViewport();
+
+	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
 
 	PhotoTakenDelegate.Broadcast();
 }
@@ -62,4 +72,11 @@ bool UADigitalCameraComponent::EnsureCanTakePhoto() const
 	}
 
 	return true;
+}
+
+void UADigitalCameraComponent::FinishCameraCooldown()
+{
+	CooldownTimerHandle.Invalidate();
+	
+	CameraCooldownDelegate.Broadcast();
 }
