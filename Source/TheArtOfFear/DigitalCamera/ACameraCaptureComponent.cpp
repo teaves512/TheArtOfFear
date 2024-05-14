@@ -2,6 +2,7 @@
 
 #include "ACameraCaptureComponent.h"
 
+#include "APhotoGallery.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetRenderingLibrary.h"
 #include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
@@ -46,16 +47,16 @@ void UADigitalCameraComponent::TakePhoto()
 	CaptureScene();
 	SceneCaptureWidget->SetPhotoRender(RT);
 	SceneCaptureWidget->AddToViewport();
+	PlayerController->AddPhoto(RT);
 
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
-
 	PhotoTakenDelegate.Broadcast();
 }
 
 void UADigitalCameraComponent::TryFindPlayerController()
 {
 	// TODO: Should be taken from the GameMode.
-	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PlayerController = Cast<AAPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::TryFindPlayerController failed."));
 }
 

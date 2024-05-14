@@ -2,7 +2,17 @@
 
 #include "APhotoGallery.h"
 
-void UAPhotoGallery::AddPhotoRender(UTextureRenderTarget2D* InPhotoRender)
+#include "Kismet/GameplayStatics.h"
+#include "TheArtOfFear/Player/APlayerController.h"
+
+bool UAPhotoGallery::TryFindPlayerController()
 {
-	
+	// TODO: Should be taken from the GameMode.
+	PlayerController = Cast<AAPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (ensureMsgf(PlayerController.IsValid(), TEXT("UADigitalCameraComponent::TryFindPlayerController failed.")))
+	{
+		return true;
+	}
+
+	return false;
 }

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "APhotoGallery.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "TheArtOfFear/Player/APlayerController.h"
 #include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
 
 #include "ACameraCaptureComponent.generated.h"
@@ -62,11 +63,11 @@ protected:
 protected:
 	/** The width all render targets declared by any scene captures from this component. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
-	int32 RenderTargetWidth = 1920;
+	int32 RenderTargetWidth = 1280;
 
 	/** The height all render targets declared by any scene captures from this component. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
-	int32 RenderTargetHeight = 1080;
+	int32 RenderTargetHeight = 720;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
 	TSoftClassPtr<UASceneCaptureWidget> SceneCaptureWidgetClass = UASceneCaptureWidget::StaticClass();
@@ -80,7 +81,7 @@ protected:
 	// INTERNAL
 private:
 	/** The player controller that owns the pawn that this component is attached to. */
-	TWeakObjectPtr<APlayerController> PlayerController = nullptr;
+	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
 	
 	FTimerHandle CooldownTimerHandle;
 	

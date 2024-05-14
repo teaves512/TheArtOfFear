@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/WrapBox.h"
 
 #include "APhotoGallery.generated.h"
 
+class AAPlayerController;
 class UTextureRenderTarget2D;
 
 /**
@@ -19,11 +22,21 @@ class THEARTOFFEAR_API UAPhotoGallery : public UUserWidget
 	GENERATED_BODY()
 
 	// INTERFACE
-public:
-	void AddPhotoRender(UTextureRenderTarget2D* InPhotoRender);
-
-	// INTERFACE
 protected:
-	//...
+	UFUNCTION(BlueprintCallable, Category="UAPhotoGallery|Interface")
+	bool TryFindPlayerController();
+
+	// PARAMS
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UAPhotoGallery|Params")
+	TSubclassOf<UASceneCaptureWidget> SceneCaptureWidgetClass;
+
+	// INTERNAL
+protected:
+	UPROPERTY(BlueprintReadOnly, meta=(BindWidget))
+	TObjectPtr<UWrapBox> WrapBox_Gallery = nullptr;
+	
+	UPROPERTY(BlueprintReadOnly, Category="UAPhotoGallery|Internal")
+	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
 	
 };

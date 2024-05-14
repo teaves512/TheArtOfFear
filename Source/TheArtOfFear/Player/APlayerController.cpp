@@ -1,6 +1,7 @@
 // Produced by Lucky 13 (Team 13) for module GDEV60033, Staffordshire University.
 
 #include "APlayerController.h"
+#include "TheArtOfFear/DigitalCamera/APhotoGallery.h"
 #include "TheArtOfFear/UI/Menus/APauseMenuContainer.h"
 
 void AAPlayerController::RequestTogglePause()
@@ -39,9 +40,19 @@ void AAPlayerController::HidePauseMenu()
 	OnPauseMenuVisibilityChanged.Broadcast(false);
 }
 
+TArray<UTextureRenderTarget2D*>& AAPlayerController::GetPhotos()
+{
+	return RenderTargetGallery;
+}
+
+void AAPlayerController::AddPhoto(UTextureRenderTarget2D* InPhoto)
+{
+	RenderTargetGallery.Emplace(InPhoto);
+}
+
 bool AAPlayerController::TryCreatePauseMenuContainer()
 {
-	if (!ensureMsgf(PauseMenuContainerClass != UUserWidget::StaticClass(), TEXT("AAPlayerController::TryCreatePauseMenuContainer failed. PauseMenuContainerClass has not been set.")))
+	if (!ensureMsgf(PauseMenuContainerClass != UAPauseMenuContainer::StaticClass(), TEXT("AAPlayerController::TryCreatePauseMenuContainer failed. PauseMenuContainerClass has not been set.")))
 	{
 		return false;
 	}
