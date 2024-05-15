@@ -28,6 +28,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
 	void HidePauseMenu();
 
+	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
+	TArray<UTextureRenderTarget2D*>& GetPhotos();
+
+	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
+	void AddPhoto(UTextureRenderTarget2D* InPhoto);
+	
 protected:
 	bool TryCreatePauseMenuContainer();
 
@@ -43,5 +49,7 @@ protected:
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerController|Internal")
 	TWeakObjectPtr<UUserWidget> PauseMenuContainer = nullptr;
+
+	TArray<UTextureRenderTarget2D*> RenderTargetGallery;
 	
 };
