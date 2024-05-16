@@ -67,6 +67,7 @@ protected:
 
 	/** The height all render targets declared by any scene captures from this component. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
+	int32 RenderTargetHeight = 288;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
 	TSoftClassPtr<UASceneCaptureWidget> SceneCaptureWidgetClass = UASceneCaptureWidget::StaticClass();
