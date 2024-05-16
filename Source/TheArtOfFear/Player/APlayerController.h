@@ -33,6 +33,9 @@ public:
 	TArray<FAPhotoGrade>& GetPhotos();
 
 	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
+	TArray<FAPhotoGrade> GetPhotosBetweenIndex(const int32 MinIndex, const int32 MaxIndex);
+
+	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
 	void AddPhoto(FAPhotoGrade InPhoto);
 	
 protected:

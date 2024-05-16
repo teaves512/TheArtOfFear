@@ -45,8 +45,39 @@ TArray<FAPhotoGrade>& AAPlayerController::GetPhotos()
 	return PhotoGallery;
 }
 
+TArray<FAPhotoGrade> AAPlayerController::GetPhotosBetweenIndex(const int32 MinIndex, const int32 MaxIndex)
+{
+	if (!ensureMsgf(MinIndex < 0 || MinIndex > PhotoGallery.Num() - 1, TEXT("AAPlayerController::GetPhotosBetweenIndex failed. MinIndex out of range.")))
+	{
+		return TArray<FAPhotoGrade>();
+	}
+
+	if (!ensureMsgf(MinIndex < 0 || MaxIndex > PhotoGallery.Num() - 1, TEXT("AAPlayerController::GetPhotosBetweenIndex failed. MinIndex out of range.")))
+	{
+		return TArray<FAPhotoGrade>();
+	}
+
+	if (!ensureMsgf(MinIndex > MaxIndex, TEXT("AAPlayerController::GetPhotosBetweenIndex failed. MinIndex must be <= MaxIndex.")))
+	{
+		return TArray<FAPhotoGrade>();
+	}
+
+	TArray<FAPhotoGrade> Photos;
+	for (int32 i = MinIndex; i < MaxIndex; ++i)
+	{
+		Photos.Emplace(PhotoGallery[i]);
+	}
+
+	return Photos;
+}
+
 void AAPlayerController::AddPhoto(FAPhotoGrade InPhoto)
 {
+	if (InPhoto.Score <= 0)
+	{
+		return;
+	}
+	
 	PhotoGallery.Emplace(InPhoto);
 	
 	if (PhotoGallery.Num() > MaxPhotoCount)
