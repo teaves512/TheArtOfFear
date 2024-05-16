@@ -40,14 +40,14 @@ void AAPlayerController::HidePauseMenu()
 	OnPauseMenuVisibilityChanged.Broadcast(false);
 }
 
-TArray<UTextureRenderTarget2D*>& AAPlayerController::GetPhotos()
+TArray<FAPhotoGrade>& AAPlayerController::GetPhotos()
 {
-	return RenderTargetGallery;
+	return PhotoGallery;
 }
 
-void AAPlayerController::AddPhoto(UTextureRenderTarget2D* InPhoto)
+void AAPlayerController::AddPhoto(FAPhotoGrade InPhoto)
 {
-	RenderTargetGallery.Emplace(InPhoto);
+	PhotoGallery.Emplace(InPhoto);
 }
 
 bool AAPlayerController::TryCreatePauseMenuContainer()
