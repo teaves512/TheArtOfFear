@@ -21,6 +21,8 @@ void UADigitalCameraComponent::BeginPlay()
 	TryFindPlayerController();
 }
 
+PRAGMA_DISABLE_OPTIMIZATION
+
 void UADigitalCameraComponent::TakePhoto()
 {
 	if (!EnsureCanTakePhoto())
@@ -46,13 +48,13 @@ void UADigitalCameraComponent::TakePhoto()
 	TextureTarget = RT;
 	CaptureScene();
 	SceneCaptureWidget->SetPhotoRender(RT);
-	SceneCaptureWidget->AddToViewport();
 
 	if (CurrentSceneCaptureWidgets.IsValid())
 	{
 		CurrentSceneCaptureWidgets->RemoveFromParent();
 	}
 	CurrentSceneCaptureWidgets = SceneCaptureWidget;
+	CurrentSceneCaptureWidgets->AddToViewport();
 
 	const FAPhotoGrade PhotoGrade = FAPhotoGrade(0, RT);
 	PlayerController->AddPhoto(PhotoGrade);
@@ -60,6 +62,8 @@ void UADigitalCameraComponent::TakePhoto()
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
 	PhotoTakenDelegate.Broadcast();
 }
+
+PRAGMA_ENABLE_OPTIMIZATION
 
 void UADigitalCameraComponent::TryFindPlayerController()
 {
