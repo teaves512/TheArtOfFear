@@ -14,7 +14,7 @@ class THEARTOFFEAR_API UAPhotogradingComponent : public UActorComponent
 
 	// INTERFACE
 public:
-	// UFUNCTION(BlueprintImplementableEvent, )
-	// int32 GradePhoto(FVector EyeLocation, APlayerController* PlayerController);
+	UFUNCTION(BlueprintImplementableEvent, Category="UAPhotogradingComponent")
+	int32 GradePhoto_BP(FVector EyeLocation, APlayerController* PlayerController);
 	
 };

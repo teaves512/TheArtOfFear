@@ -3,8 +3,10 @@
 #include "ACameraCaptureComponent.h"
 
 #include "APhotoGallery.h"
+#include "APhotogradingComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetRenderingLibrary.h"
+#include "TheArtOfFear/Player/APlayerCharacter.h"
 #include "TheArtOfFear/UI/HUD/ASceneCaptureWidget.h"
 
 UADigitalCameraComponent::UADigitalCameraComponent()
@@ -21,8 +23,6 @@ void UADigitalCameraComponent::BeginPlay()
 	TryFindPlayerController();
 }
 
-PRAGMA_DISABLE_OPTIMIZATION
-
 void UADigitalCameraComponent::TakePhoto()
 {
 	if (!EnsureCanTakePhoto())
@@ -36,7 +36,7 @@ void UADigitalCameraComponent::TakePhoto()
 		return;
 	}
 
-	PhotoSetupDelegate.Broadcast();
+	PhotoSetupDelegate.Broadcast(0);
 
 	UTextureRenderTarget2D* RT = UKismetRenderingLibrary::CreateRenderTarget2D(this, RenderTargetWidth, RenderTargetHeight);
 	UASceneCaptureWidget* SceneCaptureWidget = CreateWidget<UASceneCaptureWidget>(
@@ -56,14 +56,20 @@ void UADigitalCameraComponent::TakePhoto()
 	CurrentSceneCaptureWidgets = SceneCaptureWidget;
 	CurrentSceneCaptureWidgets->AddToViewport();
 
-	const FAPhotoGrade PhotoGrade = FAPhotoGrade(0, RT);
+	APlayerController* PC = Cast<APlayerController>(PlayerController.Get());
+	const int32 Score = PhotogradingComponent->GradePhoto_BP(GetEyeLocation(), PC);
+
+	const FAPhotoGrade PhotoGrade = FAPhotoGrade(Score, RT);
 	PlayerController->AddPhoto(PhotoGrade);
 
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
-	PhotoTakenDelegate.Broadcast();
+	PhotoTakenDelegate.Broadcast(Score);
 }
 
-PRAGMA_ENABLE_OPTIMIZATION
+void UADigitalCameraComponent::SetPhotogradingComponent(UAPhotogradingComponent* InPhotogradingComp)
+{
+	PhotogradingComponent = InPhotogradingComp;
+}
 
 void UADigitalCameraComponent::TryFindPlayerController()
 {
@@ -84,6 +90,11 @@ bool UADigitalCameraComponent::EnsureCanTakePhoto() const
 		return false;
 	}
 
+	if (!ensureMsgf(PhotogradingComponent.IsValid(), TEXT("UADigitalCameraComponent::EnsureCanTakePhoto failed. PhotogradingComponent is invalid.")))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -92,4 +103,10 @@ void UADigitalCameraComponent::FinishCameraCooldown()
 	CooldownTimerHandle.Invalidate();
 	
 	CameraCooldownDelegate.Broadcast();
+}
+
+FVector UADigitalCameraComponent::GetEyeLocation() const
+{
+	const AAPlayerCharacter* Character = Cast<AAPlayerCharacter>(GetOwner());
+	return Character->GetCameraLocation();
 }
