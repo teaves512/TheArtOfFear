@@ -38,6 +38,8 @@ public:
 protected:
 	bool TryCreatePauseMenuContainer();
 
+	void CleanupPhotoGallery();
+
 	UPROPERTY(BlueprintAssignable)
 	FPauseMenuVisibilityChangedDelegate OnPauseMenuVisibilityChanged;
 
@@ -45,6 +47,9 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="APlayerController|Params")
 	TSubclassOf<UUserWidget> PauseMenuContainerClass = UAPauseMenuContainer::StaticClass();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="APlayerController|Params")
+	int32 MaxPhotoCount = 100;
 	
 	// INTERNAL
 protected:

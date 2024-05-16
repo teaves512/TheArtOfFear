@@ -48,6 +48,11 @@ TArray<FAPhotoGrade>& AAPlayerController::GetPhotos()
 void AAPlayerController::AddPhoto(FAPhotoGrade InPhoto)
 {
 	PhotoGallery.Emplace(InPhoto);
+	
+	if (PhotoGallery.Num() > MaxPhotoCount)
+	{
+		CleanupPhotoGallery();
+	}
 }
 
 bool AAPlayerController::TryCreatePauseMenuContainer()
@@ -59,4 +64,21 @@ bool AAPlayerController::TryCreatePauseMenuContainer()
 	
 	PauseMenuContainer = CreateWidget<UUserWidget>(this, PauseMenuContainerClass);
 	return PauseMenuContainer.IsValid();
+}
+
+void AAPlayerController::CleanupPhotoGallery()
+{
+	int32 LowestScoreIndex = 0;
+	for (int32 i = 1; i < PhotoGallery.Num(); ++i)
+	{
+		const int32 LowestScore = PhotoGallery[LowestScoreIndex].Score;
+		const int32 Score = PhotoGallery[i].Score;
+
+		if (Score < LowestScore)
+		{
+			LowestScoreIndex = i;
+		}
+	}
+
+	PhotoGallery.RemoveAt(LowestScoreIndex);
 }
