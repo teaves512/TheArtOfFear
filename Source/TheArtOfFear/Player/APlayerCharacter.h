@@ -34,6 +34,9 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	// INTERFACE
+public:
+	FVector GetCameraLocation() const;
+	
 protected:
 	void OnInput_Move(const FInputActionValue& Value);
 	void OnInput_Look(const FInputActionValue& Value);

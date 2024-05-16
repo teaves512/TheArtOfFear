@@ -11,10 +11,11 @@
 #include "ACameraCaptureComponent.generated.h"
 
 class UASceneCaptureWidget;
+class UAPhotogradingComponent;
 class UAPhotoGallery;
 class UTextureRenderTarget2D;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPhotoTakenDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPhotoTakenDelegate, int32, PhotoScore);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCameraCooldownDelegate);
 
 /**
@@ -37,6 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="ADigitalCameraComponent|Interface")
 	void TakePhoto();
 
+	UFUNCTION(BlueprintCallable, Category="ADigitalCameraComponent|Interface")
+	void SetPhotogradingComponent(UAPhotogradingComponent* InPhotogradingComp);
+
 	/** Broadcast just before the screen capture is taken. */
 	UPROPERTY(BlueprintAssignable, Category="ADigitalCameraComponent|Interface")
 	FPhotoTakenDelegate PhotoSetupDelegate;
@@ -58,6 +62,8 @@ protected:
 
 	/** Broadcasts CameraCooldownDelegate. */
 	void FinishCameraCooldown();
+
+	FVector GetEyeLocation() const;
 
 	// PARAMS
 protected:
@@ -82,6 +88,8 @@ protected:
 private:
 	/** The player controller that owns the pawn that this component is attached to. */
 	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
+
+	TWeakObjectPtr<UAPhotogradingComponent> PhotogradingComponent = nullptr;
 	
 	FTimerHandle CooldownTimerHandle;
 

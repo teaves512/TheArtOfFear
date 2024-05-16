@@ -74,6 +74,11 @@ void AAPlayerCharacter::Tick(float DeltaTime)
 	// TODO: Tick is currently disabled. Enable in the constructor.
 }
 
+FVector AAPlayerCharacter::GetCameraLocation() const
+{
+	return CameraComp->GetComponentLocation();
+}
+
 void AAPlayerCharacter::OnInput_Move(const FInputActionValue& Value)
 {
 	if (Controller != nullptr)
