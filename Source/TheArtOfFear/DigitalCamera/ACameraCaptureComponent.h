@@ -63,11 +63,11 @@ protected:
 protected:
 	/** The width all render targets declared by any scene captures from this component. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
-	int32 RenderTargetWidth = 1280;
+	int32 RenderTargetWidth = 512;
 
 	/** The height all render targets declared by any scene captures from this component. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
-	int32 RenderTargetHeight = 720;
+	int32 RenderTargetHeight = 288;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="ADigitalCameraComponent|Params")
 	TSoftClassPtr<UASceneCaptureWidget> SceneCaptureWidgetClass = UASceneCaptureWidget::StaticClass();
@@ -84,5 +84,7 @@ private:
 	TWeakObjectPtr<AAPlayerController> PlayerController = nullptr;
 	
 	FTimerHandle CooldownTimerHandle;
+
+	TWeakObjectPtr<UASceneCaptureWidget> CurrentSceneCaptureWidgets = nullptr;
 	
 };

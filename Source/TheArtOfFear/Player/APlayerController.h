@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "TheArtOfFear/DigitalCamera/APhotoGrade.h"
 #include "TheArtOfFear/UI/Menus/APauseMenuContainer.h"
 
 #include "APlayerController.generated.h"
@@ -29,10 +30,10 @@ public:
 	void HidePauseMenu();
 
 	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
-	TArray<UTextureRenderTarget2D*>& GetPhotos();
+	TArray<FAPhotoGrade>& GetPhotos();
 
 	UFUNCTION(BlueprintCallable, Category="APlayerController|Interface")
-	void AddPhoto(UTextureRenderTarget2D* InPhoto);
+	void AddPhoto(FAPhotoGrade InPhoto);
 	
 protected:
 	bool TryCreatePauseMenuContainer();
@@ -50,6 +51,6 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="APlayerController|Internal")
 	TWeakObjectPtr<UUserWidget> PauseMenuContainer = nullptr;
 
-	TArray<UTextureRenderTarget2D*> RenderTargetGallery;
+	TArray<FAPhotoGrade> PhotoGallery;
 	
 };

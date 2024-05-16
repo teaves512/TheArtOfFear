@@ -47,7 +47,15 @@ void UADigitalCameraComponent::TakePhoto()
 	CaptureScene();
 	SceneCaptureWidget->SetPhotoRender(RT);
 	SceneCaptureWidget->AddToViewport();
-	PlayerController->AddPhoto(RT);
+
+	if (CurrentSceneCaptureWidgets.IsValid())
+	{
+		CurrentSceneCaptureWidgets->RemoveFromParent();
+	}
+	CurrentSceneCaptureWidgets = SceneCaptureWidget;
+
+	const FAPhotoGrade PhotoGrade = FAPhotoGrade(0, RT);
+	PlayerController->AddPhoto(PhotoGrade);
 
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
 	PhotoTakenDelegate.Broadcast();
