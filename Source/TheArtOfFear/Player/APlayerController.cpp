@@ -47,6 +47,11 @@ TArray<FAPhotoGrade>& AAPlayerController::GetPhotos()
 
 void AAPlayerController::AddPhoto(FAPhotoGrade InPhoto)
 {
+	if (InPhoto.Score <= 0)
+	{
+		return;
+	}
+	
 	PhotoGallery.Emplace(InPhoto);
 	
 	if (PhotoGallery.Num() > MaxPhotoCount)
