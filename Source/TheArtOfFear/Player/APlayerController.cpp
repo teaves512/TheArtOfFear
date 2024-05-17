@@ -1,41 +1,38 @@
 // Produced by Lucky 13 (Team 13) for module GDEV60033, Staffordshire University.
 
 #include "APlayerController.h"
+
+#include "Engine/TextureRenderTarget2D.h"
 #include "TheArtOfFear/DigitalCamera/APhotoGallery.h"
 #include "TheArtOfFear/UI/Menus/APauseMenuContainer.h"
 
 void AAPlayerController::RequestTogglePause()
 {
-	// TODO: Pause game through game mode.
-
-	if (PauseMenuContainer.IsValid() == false)
+	if (PauseMenuContainer.IsValid() == false || PauseMenuContainer->IsInViewport() == false)
 	{
-		if (!ensureMsgf(TryCreatePauseMenuContainer(), TEXT("AAPlayerController::RequestPause failed to find or instantiate PauseMenuContainer")))
-		{
-			return;
-		}
-	}
-
-	if (PauseMenuContainer->IsInViewport())
-	{
-		HidePauseMenu();
+		ShowPauseMenu();
 	}
 	else
 	{
-		ShowPauseMenu();
+		HidePauseMenu();
 	}
 }
 
 void AAPlayerController::ShowPauseMenu()
-{
-	PauseMenuContainer->AddToViewport();
+{	
+	if (TryCreatePauseMenuContainer())
+	{
+		PauseMenuContainer->AddToViewport();
+	}
 
 	OnPauseMenuVisibilityChanged.Broadcast(true);
 }
 
 void AAPlayerController::HidePauseMenu()
-{
+{	
 	PauseMenuContainer->RemoveFromParent();
+	PauseMenuContainer->MarkAsGarbage();
+	PauseMenuContainer = nullptr;
 	
 	OnPauseMenuVisibilityChanged.Broadcast(false);
 }
@@ -47,11 +44,6 @@ TArray<FAPhotoGrade>& AAPlayerController::GetPhotos()
 
 void AAPlayerController::AddPhoto(FAPhotoGrade InPhoto)
 {
-	if (InPhoto.Score <= 0)
-	{
-		return;
-	}
-	
 	PhotoGallery.Emplace(InPhoto);
 	
 	if (PhotoGallery.Num() > MaxPhotoCount)
@@ -85,5 +77,8 @@ void AAPlayerController::CleanupPhotoGallery()
 		}
 	}
 
+	PhotoGallery[LowestScoreIndex].RenderTarget->MarkAsGarbage();
+	PhotoGallery[LowestScoreIndex].RenderTarget = nullptr;
+	
 	PhotoGallery.RemoveAt(LowestScoreIndex);
 }

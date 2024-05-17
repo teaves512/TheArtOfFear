@@ -94,5 +94,7 @@ private:
 	FTimerHandle CooldownTimerHandle;
 
 	TWeakObjectPtr<UASceneCaptureWidget> CurrentSceneCaptureWidgets = nullptr;
+
+	int32 SavedRTCount = 0;
 	
 };

@@ -45,22 +45,30 @@ void UADigitalCameraComponent::TakePhoto()
 		TEXT("SceneCaptureWidget")
 	);
 
-	TextureTarget = RT;
-	CaptureScene();
-	SceneCaptureWidget->SetPhotoRender(RT);
-
-	if (CurrentSceneCaptureWidgets.IsValid())
-	{
-		CurrentSceneCaptureWidgets->RemoveFromParent();
-	}
-	CurrentSceneCaptureWidgets = SceneCaptureWidget;
-	CurrentSceneCaptureWidgets->AddToViewport();
-
 	APlayerController* PC = Cast<APlayerController>(PlayerController.Get());
 	const int32 Score = PhotogradingComponent->GradePhoto_BP(GetEyeLocation(), PC);
 
-	const FAPhotoGrade PhotoGrade = FAPhotoGrade(Score, RT);
-	PlayerController->AddPhoto(PhotoGrade);
+	if (SavedRTCount < 250)
+	{
+		TextureTarget = RT;
+		CaptureScene();
+		SceneCaptureWidget->SetPhotoRender(RT);
+
+		if (CurrentSceneCaptureWidgets.IsValid())
+		{
+			CurrentSceneCaptureWidgets->RemoveFromParent();
+		}
+		CurrentSceneCaptureWidgets = SceneCaptureWidget;
+		CurrentSceneCaptureWidgets->AddToViewport();
+
+		if (Score > 0)
+		{
+			const FAPhotoGrade PhotoGrade = FAPhotoGrade(Score, RT);
+			PlayerController->AddPhoto(PhotoGrade);
+		}
+
+		++SavedRTCount;
+	}
 
 	GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &UADigitalCameraComponent::FinishCameraCooldown, PhotoCooldownTime, false);
 	PhotoTakenDelegate.Broadcast(Score);
